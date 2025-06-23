@@ -43,3 +43,4 @@ docs/
 bun.lock
 yarn.lock
 stack.env
+.vercel
