@@ -1,5 +1,5 @@
 use cardano/assets.{PolicyId}
-use cardano/transaction.{Transaction, OutputReference}
+use cardano/transaction.{Transaction}
 use cardano/tx
 use aiken/crypto.{VerificationKeyHash}
 

@@ -1,6 +1,4 @@
-
-
-pub type ChainXRedeemer = {
+pub type ChainXRedeemer {
     Buy
     Sell
     Refund

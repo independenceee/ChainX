@@ -2,7 +2,7 @@ import { applyParamsToScript, deserializeAddress, IFetcher, MeshTxBuilder, MeshW
 import { blockfrostProvider } from "../libs";
 import { Plutus } from "../types";
 import plutus from "../../plutus.json";
-import { PLATFORM_ADDRESS, titles } from "@/constants";
+import { PLATFORM_ADDRESS, titles } from "../constants";
 
 export class MeshAdapter {
   protected fetcher!: IFetcher;

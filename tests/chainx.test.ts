@@ -1,6 +1,6 @@
 import "dotenv/config";
-import { ChainXTxBuilder } from "../src/txbuilders/chainx.txbuilder";
-import { blockfrostProvider } from "../src/libs";
+import { ChainXTxBuilder } from "../contracts/txbuilders/chainx.txbuilder";
+import { blockfrostProvider } from "../contracts/libs";
 import { beforeEach, describe, expect, jest, test } from "@jest/globals";
 import { MeshWallet } from "@meshsdk/core";
 
