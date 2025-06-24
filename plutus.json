@@ -47,7 +47,32 @@
       "hash": "e066c6bda9520276cebc618decd6df908358a0bd9e33de43f71e9cc6"
     },
     {
-      "title": "mint.placeholder.mint",
+      "title": "marketplace.store.spend",
+      "datum": {
+        "title": "_datum",
+        "schema": {
+          "$ref": "#/definitions/Void"
+        }
+      },
+      "redeemer": {
+        "title": "_redeemer",
+        "schema": {
+          "$ref": "#/definitions/Void"
+        }
+      },
+      "compiledCode": "587e01010029800aba2aba1aab9faab9eaab9dab9a48888896600264653001300700198039804000cc01c0092225980099b8748008c01cdd500144ca60026016003300b300c001acc004cdc3a400060106ea80122b300130093754009149a2c80522c80392224a23008375400516401830070013003375400f149a26cac80081",
+      "hash": "c24cdcd02db5ce526190c6a8e97ad4fbe538ca577d547edc4a3dffba"
+    },
+    {
+      "title": "marketplace.store.else",
+      "redeemer": {
+        "schema": {}
+      },
+      "compiledCode": "587e01010029800aba2aba1aab9faab9eaab9dab9a48888896600264653001300700198039804000cc01c0092225980099b8748008c01cdd500144ca60026016003300b300c001acc004cdc3a400060106ea80122b300130093754009149a2c80522c80392224a23008375400516401830070013003375400f149a26cac80081",
+      "hash": "c24cdcd02db5ce526190c6a8e97ad4fbe538ca577d547edc4a3dffba"
+    },
+    {
+      "title": "mint.mint.mint",
       "redeemer": {
         "title": "_redeemer",
         "schema": {
@@ -58,7 +83,7 @@
       "hash": "def68337867cb4f1f95b6b811fedbfcdd7780d10a95cc072077088ea"
     },
     {
-      "title": "mint.placeholder.else",
+      "title": "mint.mint.else",
       "redeemer": {
         "schema": {}
       },

@@ -9,6 +9,8 @@ const PLATFORM_ADDRESS =
 const appNetworkId = appNetwork === "mainnet" ? 1 : 0;
 const titles = {
   chainx: "chainx.chainx.mint",
+  mint: "mint.mint.mint",
+  store: "store.store.spend",
 };
 
 export { appNetwork, appNetworkId, BLOCKFROST_API_KEY, KOIOS_TOKEN, titles, PLATFORM_ADDRESS };

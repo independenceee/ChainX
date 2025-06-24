@@ -1,19 +1,13 @@
-import express from "express";
+import express, { Express } from "express";
+import routers from "./routes/index.route";
 
-const app = express();
+const app: Express = express();
+const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Express with TypeScript on Vercel");
-});
+routers(app);
 
-app.get("/greet", (req, res) => {
-  const { name } = req.query;
-  res.send(`Welcome ${name || "Guest"}!`);
-});
-
-const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

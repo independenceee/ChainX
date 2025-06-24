@@ -16,7 +16,8 @@
     "baseUrl": ".",
     "paths": {
       "package": ["./package.json"],
-      "@/*": ["contracts/*"]
+      "@/contracts/*": ["contracts/*"],
+      "@/api/*": ["api/*"]
     }
   },
   "include": ["api/**/*"],
