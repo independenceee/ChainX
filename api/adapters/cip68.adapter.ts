@@ -13,7 +13,7 @@ import {
 import { blockfrostProvider } from "@/contracts/libs";
 import { Plutus, UtXO } from "@/contracts/types";
 import plutus from "../../plutus.json";
-import { titles, appNetworkId } from "@/contracts/constants";
+import { titles, appNetworkId, PLATFORM_TOKEN } from "@/contracts/constants";
 
 export class Cip68Adapter {
   protected meshTxBuilder: MeshTxBuilder;
@@ -73,10 +73,11 @@ export class Cip68Adapter {
     walletAddress,
   }: {
     walletAddress: string;
-  }): Promise<{ walletAddress: string; utxos: Array<UTxO>; collateral: UTxO }> => {
+  }): Promise<{ walletAddress: string; utxos: Array<UTxO>; collateral: UTxO; utxoChainX: Array<UTxO> }> => {
     const utxos = await this.fetcher.fetchAddressUTxOs(walletAddress);
-    console.log(utxos);
     const collaterals = await this.fetcher.fetchAddressUTxOs(walletAddress, "lovelace");
+    console.log(collaterals);
+    const utxoChainX = await this.fetcher.fetchAddressUTxOs(walletAddress, PLATFORM_TOKEN);
 
     if (!utxos || utxos.length === 0) throw new Error("No UTXOs found in getWalletForTx method.");
 
@@ -84,6 +85,6 @@ export class Cip68Adapter {
 
     if (!walletAddress) throw new Error("No wallet address found in getWalletForTx method.");
 
-    return { utxos, collateral: collaterals[0], walletAddress };
+    return { utxos, collateral: collaterals[0], walletAddress, utxoChainX };
   };
 }

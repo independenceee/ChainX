@@ -22,13 +22,14 @@ export class Cip68Service extends Cip68Adapter {
   }: {
     walletAddress: string;
     assetName: string;
-    quantity: number;
+    quantity: string;
     metadata: Record<string, string>;
   }): Promise<string> => {
-    const { utxos, collateral } = await this.getWalletForTx({ walletAddress: PLATFORM_ADDRESS });
+    const { utxos: platformUtxos, collateral } = await this.getWalletForTx({ walletAddress: PLATFORM_ADDRESS });
+    const { utxos: walletUtxos } = await this.getWalletForTx({ walletAddress: walletAddress });
 
     const unsignedTx = await this.meshTxBuilder
-      
+
       .mintPlutusScript("V3")
       .mint(String(quantity), this.policyId, CIP68_222(stringToHex(assetName)))
       .mintingScript(this.mintScriptCbor)
@@ -39,7 +40,7 @@ export class Cip68Service extends Cip68Adapter {
       .mintingScript(this.mintScriptCbor)
       .mintRedeemerValue(mConStr0([]))
 
-      .txOut(walletAddress, [
+      .txOut(this.storeAddress, [
         {
           unit: this.policyId + CIP68_100(stringToHex(assetName)),
           quantity: String(1),
@@ -57,14 +58,16 @@ export class Cip68Service extends Cip68Adapter {
       .txOut(PLATFORM_ADDRESS, [
         {
           unit: PLATFORM_TOKEN,
-          quantity: String("10000"),
+          quantity: String("1000"),
         },
       ])
 
       .changeAddress(walletAddress)
+      .changeAddress(PLATFORM_ADDRESS)
       .requiredSignerHash(deserializeAddress(walletAddress).pubKeyHash)
       .requiredSignerHash(deserializeAddress(PLATFORM_ADDRESS).pubKeyHash)
-      .selectUtxosFrom(utxos)
+      .selectUtxosFrom(platformUtxos)
+      .selectUtxosFrom(walletUtxos)
       .txInCollateral(collateral.input.txHash, collateral.input.outputIndex, collateral.output.amount, collateral.output.address)
       .setNetwork(appNetwork)
       .complete();
