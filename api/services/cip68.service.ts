@@ -1,15 +1,74 @@
-export class Cip68Service extends MeshAdapter {
+import { Cip68Adapter } from "@/api/adapters/cip68.adapter";
+import { appNetwork, PLATFORM_ADDRESS, PLATFORM_TOKEN } from "@/contracts/constants";
+import { CIP68_100, CIP68_222, deserializeAddress, mConStr0, metadataToCip68, stringToHex } from "@meshsdk/core";
+
+export class Cip68Service extends Cip68Adapter {
+  /**
+   * @action Mint
+   * @description This method is used to mint a new asset on the ChainX blockchain.
+   *
+   * @param walletAddress - The address of the wallet that will receive the minted asset.
+   * @param assetName - The name of the asset to be minted.
+   * @param quantity - The quantity of the asset to be minted.
+   * @param metadata - Metadata associated with the asset.
+   *
+   * @returns unsignedTx - Returns a promise that resolves to the unsigned transaction string.
+   */
   mint = async ({
-    address,
+    walletAddress,
     assetName,
     quantity,
     metadata,
   }: {
-    address: string;
+    walletAddress: string;
     assetName: string;
     quantity: number;
     metadata: Record<string, string>;
   }): Promise<string> => {
-    const unsignedTx = await 
+    const { utxos, collateral } = await this.getWalletForTx({ walletAddress: PLATFORM_ADDRESS });
+
+    const unsignedTx = await this.meshTxBuilder
+      
+      .mintPlutusScript("V3")
+      .mint(String(quantity), this.policyId, CIP68_222(stringToHex(assetName)))
+      .mintingScript(this.mintScriptCbor)
+      .mintRedeemerValue(mConStr0([]))
+
+      .mintPlutusScript("V3")
+      .mint(String(quantity), this.policyId, CIP68_100(stringToHex(assetName)))
+      .mintingScript(this.mintScriptCbor)
+      .mintRedeemerValue(mConStr0([]))
+
+      .txOut(walletAddress, [
+        {
+          unit: this.policyId + CIP68_100(stringToHex(assetName)),
+          quantity: String(1),
+        },
+      ])
+      .txOutInlineDatumValue(metadataToCip68(metadata))
+
+      .txOut(walletAddress, [
+        {
+          unit: this.policyId + CIP68_222(stringToHex(assetName)),
+          quantity: String(quantity),
+        },
+      ])
+
+      .txOut(PLATFORM_ADDRESS, [
+        {
+          unit: PLATFORM_TOKEN,
+          quantity: String("10000"),
+        },
+      ])
+
+      .changeAddress(walletAddress)
+      .requiredSignerHash(deserializeAddress(walletAddress).pubKeyHash)
+      .requiredSignerHash(deserializeAddress(PLATFORM_ADDRESS).pubKeyHash)
+      .selectUtxosFrom(utxos)
+      .txInCollateral(collateral.input.txHash, collateral.input.outputIndex, collateral.output.amount, collateral.output.address)
+      .setNetwork(appNetwork)
+      .complete();
+
+    return unsignedTx;
   };
 }

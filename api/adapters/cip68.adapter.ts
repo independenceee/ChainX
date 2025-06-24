@@ -8,9 +8,10 @@ import {
   serializePlutusScript,
   scriptAddress,
   serializeAddressObj,
+  UTxO,
 } from "@meshsdk/core";
 import { blockfrostProvider } from "@/contracts/libs";
-import { Plutus } from "@/contracts/types";
+import { Plutus, UtXO } from "@/contracts/types";
 import plutus from "../../plutus.json";
 import { titles, appNetworkId } from "@/contracts/constants";
 
@@ -68,10 +69,15 @@ export class Cip68Adapter {
     return validator.compiledCode;
   };
 
-  protected getWalletForTx = async ({walletAddress}: {walletAddress: string}): Promise<{}> => {
-     const utxos = await this.wallet.getUtxos();
-    const collaterals = await this.wallet.getCollateral();
-    const walletAddress = await this.wallet.getChangeAddress();
+  protected getWalletForTx = async ({
+    walletAddress,
+  }: {
+    walletAddress: string;
+  }): Promise<{ walletAddress: string; utxos: Array<UTxO>; collateral: UTxO }> => {
+    const utxos = await this.fetcher.fetchAddressUTxOs(walletAddress);
+    console.log(utxos);
+    const collaterals = await this.fetcher.fetchAddressUTxOs(walletAddress, "lovelace");
+
     if (!utxos || utxos.length === 0) throw new Error("No UTXOs found in getWalletForTx method.");
 
     if (!collaterals || collaterals.length === 0) throw new Error("No collateral found in getWalletForTx method.");
@@ -79,5 +85,5 @@ export class Cip68Adapter {
     if (!walletAddress) throw new Error("No wallet address found in getWalletForTx method.");
 
     return { utxos, collateral: collaterals[0], walletAddress };
-  }
+  };
 }

@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/independenceee/ChainX.git"
   },
-  "license": "ISC",
+  "license": "MIT",
   "author": "",
   "type": "module",
   "main": "src/index.ts",
@@ -19,8 +19,8 @@
     "test": "tests"
   },
   "scripts": {
-    "dev": "nodemon --exec node --loader ts-node/esm api/index.ts",
-    "build": "tsc",
+    "dev": "nodemon --exec node --loader ts-node/esm -r tsconfig-paths/register api/index.ts",
+  
     "start": "node dist/api/index.js",
     "test": "jest --runInBand"
   },
@@ -30,7 +30,8 @@
     "axios": "^1.10.0",
     "express": "^5.1.0",
     "jest": "^30.0.2",
-    "ts-jest": "^29.4.0"
+    "ts-jest": "^29.4.0",
+    "tsconfig-paths": "^4.2.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
