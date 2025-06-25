@@ -106,9 +106,11 @@ export class Cip68Service extends Cip68Adapter {
         },
       ])
       .changeAddress(walletAddress)
+      .changeAddress(PLATFORM_ADDRESS)
       .requiredSignerHash(deserializeAddress(PLATFORM_ADDRESS).pubKeyHash)
       .requiredSignerHash(deserializeAddress(walletAddress).pubKeyHash)
       .selectUtxosFrom(userUtxos)
+      .selectUtxosFrom(platformUtxos)
       .txInCollateral(
         collateral.input.txHash,
         collateral.input.outputIndex,
