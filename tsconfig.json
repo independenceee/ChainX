@@ -11,11 +11,11 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "baseUrl": ".",
+    "baseUrl": "src",
+    "outDir": "./dist",
+    "rootDir": "./src",
     "paths": {
-      "package": ["./package.json"],
-      "@/contracts/*": ["src/contracts/*"],
-      "@/api/*": ["src/api/*"]
+      "@/*": ["*"]
     }
   },
 

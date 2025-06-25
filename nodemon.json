@@ -1,5 +1,5 @@
 {
   "watch": ["api"],
   "ext": "ts,json",
-  "exec": "ts-node -r tsconfig-paths/register ./api/index.ts"
+  "exec": "nodemon --exec bun run src/api/index.ts"
 }

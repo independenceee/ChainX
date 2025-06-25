@@ -11,11 +11,11 @@ const options: swaggerJsdoc.Options = {
     },
     servers: [
       {
-        url: process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000",
+        url: !process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000",
       },
     ],
   },
-  apis: ["@/api/routes/*.ts"], // Use path alias for routes
+  apis: ["src/api/routes/*.ts"],
 };
 
 const specs = swaggerJsdoc(options);

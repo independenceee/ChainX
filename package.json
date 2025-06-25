@@ -19,7 +19,7 @@
     "test": "tests"
   },
   "scripts": {
-    "dev": "nodemon --exec node --loader ts-node/esm -r tsconfig-paths/register src/api/index.ts",
+    "dev": "nodemon",
     "start": "node dist/api/index.js",
     "test": "jest --runInBand"
   },
