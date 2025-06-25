@@ -1,9 +1,9 @@
 import "dotenv/config";
-import { ChainXTxBuilder } from "../contracts/txbuilders/chainx.txbuilder";
-import { blockfrostProvider } from "../contracts/libs";
+import { ChainXTxBuilder } from "../src/contracts/txbuilders/chainx.txbuilder";
+import { blockfrostProvider } from "../src/contracts/libs";
 import { beforeEach, describe, expect, jest, test } from "@jest/globals";
 import { MeshWallet } from "@meshsdk/core";
-import { Cip68Service } from "../api/services/cip68.service";
+import { Cip68Service } from "../src/api/services/cip68.service";
 describe("Mint, Burn, Update", function () {
   let platformWallet: MeshWallet;
   let userWallet: MeshWallet;

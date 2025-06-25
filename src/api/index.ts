@@ -1,7 +1,6 @@
 import "dotenv/config";
 import express, { Express, Request, Response } from "express";
-import swaggerUtil from "./utils/swagger.util";
-
+import swaggerUtil from "@/api/utils/swagger.util";
 import cip68 from "@/api/routes/index.route";
 
 const app: Express = express();
@@ -11,7 +10,7 @@ app.use(express.json());
 app.use("/documents", swaggerUtil.swaggerUi.serve, swaggerUtil.swaggerUi.setup(swaggerUtil.specs));
 
 app.get("/", (req: Request, res: Response) => {
-  res.json({ message: "Welcome to the ChainX API!" });
+  res.json({ message: "Welcome to ChainX API! Visit /api-docs for documentation." });
 });
 
 app.use("/api/v1/mint", cip68);

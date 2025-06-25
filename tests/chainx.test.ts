@@ -1,5 +1,5 @@
-import { ChainXTxBuilder } from "../contracts/txbuilders/chainx.txbuilder";
-import { blockfrostProvider } from "../contracts/libs";
+import { ChainXTxBuilder } from "../src/contracts/txbuilders/chainx.txbuilder";
+import { blockfrostProvider } from "../src/contracts/libs";
 import { beforeEach, describe, expect, jest, test } from "@jest/globals";
 import { MeshWallet } from "@meshsdk/core";
 

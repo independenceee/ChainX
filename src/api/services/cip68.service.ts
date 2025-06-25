@@ -26,9 +26,42 @@ export class Cip68Service extends Cip68Adapter {
     metadata: Record<string, string>;
   }): Promise<string> => {
     const { utxos: platformUtxos, collateral } = await this.getWalletForTx({ walletAddress: PLATFORM_ADDRESS });
-    const { utxos: walletUtxos } = await this.getWalletForTx({ walletAddress: walletAddress });
+    const { utxos: userUtxos } = await this.getWalletForTx({ walletAddress: walletAddress });
+    const userUtxosInput = this.getUtxoForTx({
+      utxos: userUtxos,
+      unit: PLATFORM_TOKEN,
+      quantity: String(20),
+    });
+    const platformUtxosInput = this.getUtxoOnlyLovelace({
+      utxos: platformUtxos,
+      unit: "lovelace",
+      quantity: String(10_000_000),
+    });
+
+    console.log("userUtxosInput", userUtxosInput);
+    console.log("platformUtxosInput", platformUtxosInput);
+
+    const userChainXAmount = this.getAmountUnit({ utxo: userUtxosInput, unit: PLATFORM_TOKEN });
+    const userLovelaceAmount = this.getAmountUnit({
+      utxo: userUtxosInput,
+      unit: "lovelace",
+    });
 
     const unsignedTx = await this.meshTxBuilder
+
+      .txIn(
+        userUtxosInput.input.txHash,
+        userUtxosInput.input.outputIndex,
+        userUtxosInput.output.amount,
+        userUtxosInput.output.address,
+      )
+
+      .txIn(
+        platformUtxosInput.input.txHash,
+        platformUtxosInput.input.outputIndex,
+        platformUtxosInput.output.amount,
+        platformUtxosInput.output.address,
+      )
 
       .mintPlutusScript("V3")
       .mint(String(quantity), this.policyId, CIP68_222(stringToHex(assetName)))
@@ -36,7 +69,7 @@ export class Cip68Service extends Cip68Adapter {
       .mintRedeemerValue(mConStr0([]))
 
       .mintPlutusScript("V3")
-      .mint(String(quantity), this.policyId, CIP68_100(stringToHex(assetName)))
+      .mint(String("1"), this.policyId, CIP68_100(stringToHex(assetName)))
       .mintingScript(this.mintScriptCbor)
       .mintRedeemerValue(mConStr0([]))
 
@@ -55,23 +88,44 @@ export class Cip68Service extends Cip68Adapter {
         },
       ])
 
-      .txOut(PLATFORM_ADDRESS, [
+      .txOut(walletAddress, [
+        {
+          unit: "lovelace",
+          quantity: String(userLovelaceAmount),
+        },
         {
           unit: PLATFORM_TOKEN,
-          quantity: String("1"),
+          quantity: String(userChainXAmount - 20), // 20 is the fee for minting
         },
       ])
 
-      .changeAddress(PLATFORM_ADDRESS)
+      .txOut(PLATFORM_ADDRESS, [
+        {
+          unit: PLATFORM_TOKEN,
+          quantity: String("20"),
+        },
+      ])
       .changeAddress(walletAddress)
       .requiredSignerHash(deserializeAddress(PLATFORM_ADDRESS).pubKeyHash)
       .requiredSignerHash(deserializeAddress(walletAddress).pubKeyHash)
-      .selectUtxosFrom(platformUtxos)
-      .selectUtxosFrom(walletUtxos)
-      .txInCollateral(collateral.input.txHash, collateral.input.outputIndex, collateral.output.amount, collateral.output.address)
+      .selectUtxosFrom(userUtxos)
+      .txInCollateral(
+        collateral.input.txHash,
+        collateral.input.outputIndex,
+        collateral.output.amount,
+        collateral.output.address,
+      )
       .setNetwork(appNetwork)
       .complete();
 
     return unsignedTx;
+  };
+
+  update = async ({}): Promise<string> => {
+    return "";
+  };
+
+  burn = async ({}): Promise<string> => {
+    return "";
   };
 }

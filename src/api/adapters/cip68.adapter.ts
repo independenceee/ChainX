@@ -45,7 +45,11 @@ export class Cip68Adapter {
     };
 
     this.storeAddress = serializeAddressObj(
-      scriptAddress(deserializeAddress(serializePlutusScript(this.storeScript, undefined, appNetworkId, false).address).scriptHash, "", false),
+      scriptAddress(
+        deserializeAddress(serializePlutusScript(this.storeScript, undefined, appNetworkId, false).address).scriptHash,
+        "",
+        false,
+      ),
       appNetworkId,
     );
 
@@ -76,15 +80,38 @@ export class Cip68Adapter {
   }): Promise<{ walletAddress: string; utxos: Array<UTxO>; collateral: UTxO; utxoChainX: Array<UTxO> }> => {
     const utxos = await this.fetcher.fetchAddressUTxOs(walletAddress);
     const collaterals = await this.fetcher.fetchAddressUTxOs(walletAddress, "lovelace");
-    console.log(collaterals);
     const utxoChainX = await this.fetcher.fetchAddressUTxOs(walletAddress, PLATFORM_TOKEN);
-
     if (!utxos || utxos.length === 0) throw new Error("No UTXOs found in getWalletForTx method.");
-
     if (!collaterals || collaterals.length === 0) throw new Error("No collateral found in getWalletForTx method.");
-
     if (!walletAddress) throw new Error("No wallet address found in getWalletForTx method.");
-
     return { utxos, collateral: collaterals[0], walletAddress, utxoChainX };
+  };
+
+  getUtxoOnlyLovelace = ({ utxos, unit, quantity }: { utxos: UTxO[]; unit: string; quantity: string }): UTxO => {
+    return utxos.filter(function (utxo) {
+      const utxoOnlyUnit = utxo.output.amount.every(function (amount) {
+        return amount.unit === "lovelace";
+      });
+      const utxoEnoughQuantity = utxo.output.amount.some(function (amount) {
+        return amount.unit === unit && Number(amount.quantity) >= Number(quantity);
+      });
+      return utxoOnlyUnit && utxoEnoughQuantity;
+    })[0];
+  };
+
+  getUtxoForTx = ({ utxos, unit, quantity }: { utxos: UTxO[]; unit: string; quantity: string }): UTxO => {
+    return utxos.filter(function (utxo) {
+      const utxoEnoughQuantity = utxo.output.amount.some(function (amount) {
+        return amount.unit === unit && Number(amount.quantity) >= Number(quantity);
+      });
+      return utxoEnoughQuantity;
+    })[0];
+  };
+
+  getAmountUnit = ({ utxo, unit }: { utxo: UTxO; unit: string }): number => {
+    const total = utxo.output.amount
+      .filter((amount) => amount.unit === unit)
+      .reduce((sum, amount) => sum + Number(amount.quantity), 0);
+    return total;
   };
 }
