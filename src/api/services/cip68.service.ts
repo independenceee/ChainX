@@ -38,8 +38,7 @@ export class Cip68Service extends Cip68Adapter {
       quantity: String(10_000_000),
     });
 
-    console.log("userUtxosInput", userUtxosInput);
-    console.log("platformUtxosInput", platformUtxosInput);
+
 
     const userChainXAmount = this.getAmountUnit({ utxo: userUtxosInput, unit: PLATFORM_TOKEN });
     const userLovelaceAmount = this.getAmountUnit({

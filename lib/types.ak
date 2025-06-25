@@ -1,5 +1,5 @@
 pub type ChainXRedeemer {
-    Buy
-    Sell
-    Refund
+  Buy
+  Sell
+  Refund
 }
