@@ -10,10 +10,10 @@ import {
   serializeAddressObj,
   UTxO,
 } from "@meshsdk/core";
-import { blockfrostProvider } from "@/contracts/libs";
-import { Plutus, UtXO } from "@/contracts/types";
-import plutus from "../../plutus.json";
-import { titles, appNetworkId, PLATFORM_TOKEN } from "@/contracts/constants";
+import { blockfrostProvider } from "src/contracts/libs";
+import { Plutus, UtXO } from "src/contracts/types";
+import plutus from "../../../plutus.json";
+import { titles, appNetworkId, PLATFORM_TOKEN } from "src/contracts/constants";
 
 export class Cip68Adapter {
   protected meshTxBuilder: MeshTxBuilder;

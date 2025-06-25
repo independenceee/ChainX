@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { ChainXTxBuilder } from "../contracts/txbuilders/chainx.txbuilder";
 import { blockfrostProvider } from "../contracts/libs";
 import { beforeEach, describe, expect, jest, test } from "@jest/globals";

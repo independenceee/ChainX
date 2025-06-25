@@ -14,10 +14,14 @@
     "baseUrl": ".",
     "paths": {
       "package": ["./package.json"],
-      "@/contracts/*": ["contracts/*"],
-      "@/api/*": ["api/*"]
+      "@/contracts/*": ["src/contracts/*"],
+      "@/api/*": ["src/api/*"]
     }
   },
-  "include": ["api/**/*"],
-  "exclude": ["node_modules"]
+
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"],
+  "ts-node": {
+    "esm": true
+  }
 }

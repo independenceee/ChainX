@@ -1,5 +1,5 @@
 import { Cip68Adapter } from "@/api/adapters/cip68.adapter";
-import { appNetwork, PLATFORM_ADDRESS, PLATFORM_TOKEN } from "@/contracts/constants";
+import { appNetwork, PLATFORM_ADDRESS, PLATFORM_TOKEN } from "src/contracts/constants";
 import { CIP68_100, CIP68_222, deserializeAddress, mConStr0, metadataToCip68, stringToHex } from "@meshsdk/core";
 
 export class Cip68Service extends Cip68Adapter {
@@ -58,14 +58,14 @@ export class Cip68Service extends Cip68Adapter {
       .txOut(PLATFORM_ADDRESS, [
         {
           unit: PLATFORM_TOKEN,
-          quantity: String("1000"),
+          quantity: String("1"),
         },
       ])
 
-      .changeAddress(walletAddress)
       .changeAddress(PLATFORM_ADDRESS)
-      .requiredSignerHash(deserializeAddress(walletAddress).pubKeyHash)
+      .changeAddress(walletAddress)
       .requiredSignerHash(deserializeAddress(PLATFORM_ADDRESS).pubKeyHash)
+      .requiredSignerHash(deserializeAddress(walletAddress).pubKeyHash)
       .selectUtxosFrom(platformUtxos)
       .selectUtxosFrom(walletUtxos)
       .txInCollateral(collateral.input.txHash, collateral.input.outputIndex, collateral.output.amount, collateral.output.address)
