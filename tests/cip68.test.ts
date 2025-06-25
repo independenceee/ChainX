@@ -1,5 +1,4 @@
 import "dotenv/config";
-import { ChainXTxBuilder } from "../src/contracts/txbuilders/chainx.txbuilder";
 import { blockfrostProvider } from "../src/contracts/libs";
 import { beforeEach, describe, expect, jest, test } from "@jest/globals";
 import { MeshWallet } from "@meshsdk/core";
@@ -30,16 +29,13 @@ describe("Mint, Burn, Update", function () {
     });
   });
 
-  jest.setTimeout(600000000);
-
   test("Mint", async function () {
-    // return
-
     const cip68Service: Cip68Service = new Cip68Service();
     const unsignedTx: string = await cip68Service.mint({
       assetName: "Lychee",
       quantity: "10000",
-      walletAddress: "addr_test1qqsy43jcmcmrpn3fyqyl7yjrqsyktq4ttatpgrxa6xpjs9kr8c058qthpyvr5j5s338vr00x0hgq60saq9jwm30xe04s7nxk3k",
+      walletAddress:
+        "addr_test1qqsy43jcmcmrpn3fyqyl7yjrqsyktq4ttatpgrxa6xpjs9kr8c058qthpyvr5j5s338vr00x0hgq60saq9jwm30xe04s7nxk3k",
       metadata: {
         name: "Lychee",
         description: "A sweet and juicy fruit",
@@ -48,7 +44,33 @@ describe("Mint, Burn, Update", function () {
     });
     const signedTx = await userWallet.signTx(unsignedTx, true);
     console.log(signedTx);
-    // const txHash = await wallet.submitTx(signedTx);
-    // console.log("https://preview.cexplorer.io/tx/" + txHash);
+  });
+
+  test("Update", async function () {
+    const cip68Service: Cip68Service = new Cip68Service();
+    const unsignedTx: string = await cip68Service.update({
+      assetName: "Lychee",
+      walletAddress:
+        "addr_test1qqsy43jcmcmrpn3fyqyl7yjrqsyktq4ttatpgrxa6xpjs9kr8c058qthpyvr5j5s338vr00x0hgq60saq9jwm30xe04s7nxk3k",
+      metadata: {
+        name: "Lychee",
+        description: "A sweet and juicy fruit",
+        image: "https://example.com/lychee.png",
+      },
+    });
+    const signedTx = await userWallet.signTx(unsignedTx, true);
+    console.log(signedTx);
+  });
+
+  test("Burn", async function () {
+    const cip68Service: Cip68Service = new Cip68Service();
+    const unsignedTx: string = await cip68Service.burn({
+      assetName: "Lychee",
+      walletAddress:
+        "addr_test1qqsy43jcmcmrpn3fyqyl7yjrqsyktq4ttatpgrxa6xpjs9kr8c058qthpyvr5j5s338vr00x0hgq60saq9jwm30xe04s7nxk3k",
+      quantity: "-1",
+    });
+    const signedTx = await userWallet.signTx(unsignedTx, true);
+    console.log(signedTx);
   });
 });

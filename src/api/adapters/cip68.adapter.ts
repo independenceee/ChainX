@@ -108,10 +108,29 @@ export class Cip68Adapter {
     })[0];
   };
 
+  getUtxoForTxHash = async (address: string, txHash: string) => {
+    const utxos: UTxO[] = await this.fetcher.fetchAddressUTxOs(address);
+    const utxo = utxos.find(function (utxo: UTxO) {
+      return utxo.input.txHash === txHash;
+    });
+
+    if (!utxo) throw new Error("No UTXOs found in getUtxoForTx method.");
+    return utxo;
+  };
+
   getAmountUnit = ({ utxo, unit }: { utxo: UTxO; unit: string }): number => {
     const total = utxo.output.amount
       .filter((amount) => amount.unit === unit)
       .reduce((sum, amount) => sum + Number(amount.quantity), 0);
     return total;
+  };
+
+  protected getAddressUTXOAsset = async (address: string, unit: string) => {
+    const utxos = await this.fetcher.fetchAddressUTxOs(address, unit);
+    return utxos[utxos.length - 1];
+  };
+
+  protected getAddressUTXOAssets = async (address: string, unit: string) => {
+    return await this.fetcher.fetchAddressUTxOs(address, unit);
   };
 }

@@ -1,6 +1,7 @@
 import { IFetcher, MeshTxBuilder, PlutusScript } from "@meshsdk/core";
 import { blockfrostProvider } from "@/contracts/libs";
 import { Plutus } from "@/contracts/types";
+import plutus from "../../../plutus.json";
 
 export class MarketplaceAdapter {
   protected meshTxBuilder: MeshTxBuilder;
@@ -20,6 +21,9 @@ export class MarketplaceAdapter {
       fetcher: this.fetcher,
       evaluator: blockfrostProvider,
     });
+
+    this.mintCompileCode = this.readValidator(plutus as Plutus, "mint");
+    this.marketplaceCompileCode = this.readValidator(plutus as Plutus, "marketplace");
   }
 
   protected readValidator = function (plutus: Plutus, title: string): string {
