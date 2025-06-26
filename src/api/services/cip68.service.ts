@@ -151,7 +151,16 @@ export class Cip68Service extends Cip68Adapter {
       unit: "lovelace",
       quantity: String(10_000_000),
     });
+    const userUtxosInputUnit = this.getUtxoForTx({
+      utxos: userUtxos,
+      unit: this.policyId + CIP68_222(stringToHex(assetName)),
+      quantity: String(-quantity),
+    });
     const userChainXAmount = this.getAmountUnit({ utxo: userUtxosInput, unit: PLATFORM_TOKEN });
+    const userUnitAmount = this.getAmountUnit({
+      utxo: userUtxosInputUnit,
+      unit: this.policyId + CIP68_222(stringToHex(assetName)),
+    });
     const userLovelaceAmount = this.getAmountUnit({
       utxo: userUtxosInput,
       unit: "lovelace",
@@ -176,6 +185,12 @@ export class Cip68Service extends Cip68Adapter {
       );
     }, 0);
     const unsignedTx = this.meshTxBuilder
+      .txIn(
+        userUtxosInputUnit.input.txHash,
+        userUtxosInputUnit.input.outputIndex,
+        userUtxosInputUnit.output.amount,
+        userUtxosInputUnit.output.address,
+      )
       .txIn(
         userUtxosInput.input.txHash,
         userUtxosInput.input.outputIndex,
@@ -209,7 +224,6 @@ export class Cip68Service extends Cip68Adapter {
         .txInRedeemerValue(mConStr1([]))
         .txInScript(this.storeScriptCbor);
     } else {
-      console.log(amount, quantity);
       unsignedTx
         .mintPlutusScript("V3")
         .mint(quantity, this.policyId, CIP68_222(stringToHex(assetName)))
@@ -219,7 +233,7 @@ export class Cip68Service extends Cip68Adapter {
         .txOut(walletAddress, [
           {
             unit: this.policyId + CIP68_222(stringToHex(assetName)),
-            quantity: String(amount + Number(quantity)),
+            quantity: String(userUnitAmount + Number(quantity)),
           },
         ]);
     }

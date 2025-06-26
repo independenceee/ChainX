@@ -7,6 +7,6 @@ export default new (class MarketplaceController {
   }
   buy = async (request: Request, response: Response) => {};
   sell = async (request: Request, response: Response) => {};
-  mint= async (request: Request, response: Response) => {}
+  mint = async (request: Request, response: Response) => {};
   refund = async (request: Request, response: Response) => {};
 })();

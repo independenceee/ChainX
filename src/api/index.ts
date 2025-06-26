@@ -13,7 +13,7 @@ app.get("/", (req: Request, res: Response) => {
   res.json({ message: "Welcome to ChainX API! Visit /api-docs for documentation." });
 });
 
-app.use("/api/v1/mint", cip68);
+app.use("/api/v1/cip68", cip68);
 
 app.listen(port, () => {
   console.log(`http://localhost:${port}`);

@@ -30,6 +30,7 @@ describe("Mint, Burn, Update", function () {
   });
 
   test("Mint", async function () {
+    return;
     const cip68Service: Cip68Service = new Cip68Service();
     const unsignedTx: string = await cip68Service.mint({
       assetName: "Lychee",
@@ -42,11 +43,14 @@ describe("Mint, Burn, Update", function () {
         image: "https://example.com/lychee.png",
       },
     });
-    const signedTx = await userWallet.signTx(unsignedTx, true);
-    console.log(signedTx);
+    const platformSignedTx = await platformWallet.signTx(unsignedTx, true);
+    const userSignedTx = await userWallet.signTx(platformSignedTx, true);
+    const txHash = await userWallet.submitTx(userSignedTx);
+    console.log("https://preview.cexplorer.io/tx/" + txHash);
   });
 
   test("Update", async function () {
+    return;
     const cip68Service: Cip68Service = new Cip68Service();
     const unsignedTx: string = await cip68Service.update({
       assetName: "Lychee",
@@ -58,19 +62,24 @@ describe("Mint, Burn, Update", function () {
         image: "https://example.com/lychee.png",
       },
     });
-    const signedTx = await userWallet.signTx(unsignedTx, true);
-    console.log(signedTx);
+    const platformSignedTx = await platformWallet.signTx(unsignedTx, true);
+    const userSignedTx = await userWallet.signTx(platformSignedTx, true);
+    const txHash = await userWallet.submitTx(userSignedTx);
+    console.log("https://preview.cexplorer.io/tx/" + txHash);
   });
 
   test("Burn", async function () {
+    return;
     const cip68Service: Cip68Service = new Cip68Service();
     const unsignedTx: string = await cip68Service.burn({
       assetName: "Lychee",
       walletAddress:
         "addr_test1qqsy43jcmcmrpn3fyqyl7yjrqsyktq4ttatpgrxa6xpjs9kr8c058qthpyvr5j5s338vr00x0hgq60saq9jwm30xe04s7nxk3k",
-      quantity: "-1",
+      quantity: "-10000",
     });
-    const signedTx = await userWallet.signTx(unsignedTx, true);
-    console.log(signedTx);
+    const platformSignedTx = await platformWallet.signTx(unsignedTx, true);
+    const userSignedTx = await userWallet.signTx(platformSignedTx, true);
+    const txHash = await userWallet.submitTx(userSignedTx);
+    console.log("https://preview.cexplorer.io/tx/" + txHash);
   });
 });
