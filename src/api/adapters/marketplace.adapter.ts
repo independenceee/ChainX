@@ -1,7 +1,18 @@
-import { IFetcher, MeshTxBuilder, PlutusScript } from "@meshsdk/core";
+import {
+  applyParamsToScript,
+  deserializeAddress,
+  IFetcher,
+  MeshTxBuilder,
+  PlutusScript,
+  resolveScriptHash,
+  scriptAddress,
+  serializeAddressObj,
+  serializePlutusScript,
+} from "@meshsdk/core";
 import { blockfrostProvider } from "@/contracts/libs";
 import { Plutus } from "@/contracts/types";
 import plutus from "../../../plutus.json";
+import { appNetworkId, titles } from "@/contracts/constants";
 
 export class MarketplaceAdapter {
   protected meshTxBuilder: MeshTxBuilder;
@@ -22,8 +33,31 @@ export class MarketplaceAdapter {
       evaluator: blockfrostProvider,
     });
 
-    this.mintCompileCode = this.readValidator(plutus as Plutus, "mint");
-    this.marketplaceCompileCode = this.readValidator(plutus as Plutus, "marketplace");
+    this.mintCompileCode = this.readValidator(plutus as Plutus, titles.chainx);
+    this.marketplaceCompileCode = this.readValidator(plutus as Plutus, titles.marketplace);
+
+    this.marketplaceScriptCbor = applyParamsToScript(this.marketplaceCompileCode, []);
+    this.marketplaceScript = {
+      code: this.marketplaceScriptCbor,
+      version: "V3",
+    };
+    this.marketplaceAddress = serializeAddressObj(
+      scriptAddress(
+        deserializeAddress(serializePlutusScript(this.marketplaceScript, undefined, appNetworkId, false).address)
+          .scriptHash,
+        "",
+        false,
+      ),
+      appNetworkId,
+    );
+
+    this.mintScriptCbor = applyParamsToScript(this.mintCompileCode, []);
+    this.mintScript = {
+      code: this.mintScriptCbor,
+      version: "V3",
+    };
+
+    this.policyId = resolveScriptHash(this.mintScriptCbor, "V3");
   }
 
   protected readValidator = function (plutus: Plutus, title: string): string {
