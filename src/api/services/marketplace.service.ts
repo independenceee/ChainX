@@ -1,7 +1,15 @@
 import { MarketplaceAdapter } from "../adapters/marketplace.adapter";
 
 export class MarketplaceService extends MarketplaceAdapter {
-  mint = async ({}): Promise<string> => {
+  mint = async ({
+    assetName = "Chain X",
+    quantity,
+    walletAddress,
+  }: {
+    assetName: string;
+    quantity: string;
+    walletAddress: string;
+  }): Promise<string> => {
     const unsignedTx = this.meshTxBuilder;
 
     return await unsignedTx.complete();

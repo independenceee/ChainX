@@ -16,5 +16,8 @@ describe("Marketplace", function () {
     });
   });
 
+  test("Buy", async function () {});
   test("Mint", async function () {});
+  test("Sell", async function () {});
+  test("Refund", async function () {});
 });

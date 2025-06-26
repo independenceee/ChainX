@@ -1,7 +1,8 @@
 import "dotenv/config";
 import express, { Express, Request, Response } from "express";
 import swaggerUtil from "@/api/utils/swagger.util";
-import cip68 from "@/api/routes/index.route";
+import cip68 from "@/api/routes/cip68.route";
+import marketplace from "@/api/routes/marketplace.route";
 
 const app: Express = express();
 const port = process.env.PORT || 3000;
@@ -14,6 +15,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/v1/cip68", cip68);
+app.use("/api/v1/marketplace", marketplace);
 
 app.listen(port, () => {
   console.log(`http://localhost:${port}`);

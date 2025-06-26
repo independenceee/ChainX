@@ -1,9 +1,9 @@
 import "dotenv/config";
 import { blockfrostProvider } from "../src/contracts/libs";
-import { beforeEach, describe, expect, jest, test } from "@jest/globals";
+import { beforeEach, describe, test } from "@jest/globals";
 import { MeshWallet } from "@meshsdk/core";
 import { Cip68Service } from "../src/api/services/cip68.service";
-describe("Mint, Burn, Update", function () {
+describe("Cip68", function () {
   let platformWallet: MeshWallet;
   let userWallet: MeshWallet;
 

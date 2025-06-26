@@ -20,7 +20,7 @@ export default new (class Cip68Controller {
     if (!walletAddress || !assetName || !quantity) {
       response.status(400).json({ error: "Missing required fields." });
     }
-    
+
     try {
       const unsignedTx = await this.cip68Service.mint({ walletAddress, assetName, quantity, metadata });
       response.status(200).json({ unsignedTx });

@@ -8,11 +8,12 @@ import {
   scriptAddress,
   serializeAddressObj,
   serializePlutusScript,
+  UTxO,
 } from "@meshsdk/core";
 import { blockfrostProvider } from "@/contracts/libs";
 import { Plutus } from "@/contracts/types";
 import plutus from "../../../plutus.json";
-import { appNetworkId, titles } from "@/contracts/constants";
+import { appNetworkId, PLATFORM_TOKEN, titles } from "@/contracts/constants";
 
 export class MarketplaceAdapter {
   protected meshTxBuilder: MeshTxBuilder;
@@ -70,5 +71,66 @@ export class MarketplaceAdapter {
     }
 
     return validator.compiledCode;
+  };
+
+  protected getWalletForTx = async ({
+    walletAddress,
+  }: {
+    walletAddress: string;
+  }): Promise<{ walletAddress: string; utxos: Array<UTxO>; collateral: UTxO; utxoChainX: Array<UTxO> }> => {
+    const utxos = await this.fetcher.fetchAddressUTxOs(walletAddress);
+    const collaterals = await this.fetcher.fetchAddressUTxOs(walletAddress, "lovelace");
+    const utxoChainX = await this.fetcher.fetchAddressUTxOs(walletAddress, PLATFORM_TOKEN);
+    if (!utxos || utxos.length === 0) throw new Error("No UTXOs found in getWalletForTx method.");
+    if (!collaterals || collaterals.length === 0) throw new Error("No collateral found in getWalletForTx method.");
+    if (!walletAddress) throw new Error("No wallet address found in getWalletForTx method.");
+    return { utxos, collateral: collaterals[0], walletAddress, utxoChainX };
+  };
+
+  getUtxoOnlyLovelace = ({ utxos, unit, quantity }: { utxos: UTxO[]; unit: string; quantity: string }): UTxO => {
+    return utxos.filter(function (utxo) {
+      const utxoOnlyUnit = utxo.output.amount.every(function (amount) {
+        return amount.unit === "lovelace";
+      });
+      const utxoEnoughQuantity = utxo.output.amount.some(function (amount) {
+        return amount.unit === unit && Number(amount.quantity) >= Number(quantity);
+      });
+      return utxoOnlyUnit && utxoEnoughQuantity;
+    })[0];
+  };
+
+  getUtxoForTx = ({ utxos, unit, quantity }: { utxos: UTxO[]; unit: string; quantity: string }): UTxO => {
+    return utxos.filter(function (utxo) {
+      const utxoEnoughQuantity = utxo.output.amount.some(function (amount) {
+        return amount.unit === unit && Number(amount.quantity) >= Number(quantity);
+      });
+      return utxoEnoughQuantity;
+    })[0];
+  };
+
+  getUtxoForTxHash = async (address: string, txHash: string) => {
+    const utxos: UTxO[] = await this.fetcher.fetchAddressUTxOs(address);
+    const utxo = utxos.find(function (utxo: UTxO) {
+      return utxo.input.txHash === txHash;
+    });
+
+    if (!utxo) throw new Error("No UTXOs found in getUtxoForTx method.");
+    return utxo;
+  };
+
+  getAmountUnit = ({ utxo, unit }: { utxo: UTxO; unit: string }): number => {
+    const total = utxo.output.amount
+      .filter((amount) => amount.unit === unit)
+      .reduce((sum, amount) => sum + Number(amount.quantity), 0);
+    return total;
+  };
+
+  protected getAddressUTXOAsset = async (address: string, unit: string) => {
+    const utxos = await this.fetcher.fetchAddressUTxOs(address, unit);
+    return utxos[utxos.length - 1];
+  };
+
+  protected getAddressUTXOAssets = async (address: string, unit: string) => {
+    return await this.fetcher.fetchAddressUTxOs(address, unit);
   };
 }
