@@ -44,8 +44,22 @@ export default new (class MarketplaceController {
    * @param response
    */
   mint = async (request: Request, response: Response) => {
-    const { walletAddress, policyId, assetName, quantity } = request.body;
-    if (!walletAddress || !assetName || !quantity || !policyId) {
+    const { walletAddress, assetName, quantity } = request.body;
+    if (!walletAddress || !assetName || !quantity) {
+      response.status(400).json({ error: "Missing required fields." });
+    }
+  };
+
+  /**
+   * @action POST /marketplace/burn
+   * @description This method is used to mint asset on the ChainX Blockchain
+   *
+   * @param request
+   * @param response
+   */
+  burn = async (request: Request, response: Response) => {
+    const { walletAddress, assetName, quantity } = request.body;
+    if (!walletAddress || !assetName || !quantity) {
       response.status(400).json({ error: "Missing required fields." });
     }
   };
