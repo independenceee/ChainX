@@ -20,6 +20,13 @@ export default new (class MarketplaceController {
     if (!walletAddress || !assetName || !quantity || !policyId) {
       response.status(400).json({ error: "Missing required fields." });
     }
+
+    try {
+      const unsignedTx = await this.marketplaceService.mint({ walletAddress, assetName, quantity });
+      response.status(200).json({ unsignedTx });
+    } catch (error) {
+      response.status(500).json({ error: "Minting failed." });
+    }
   };
 
   /**
@@ -30,9 +37,16 @@ export default new (class MarketplaceController {
    * @param response
    */
   sell = async (request: Request, response: Response) => {
-    const { walletAddress, policyId, assetName, quantity } = request.body;
-    if (!walletAddress || !assetName || !quantity || !policyId) {
+    const { walletAddress, policyId, assetName, quantity, price } = request.body;
+    if (!walletAddress || !assetName || !quantity || !policyId || !price) {
       response.status(400).json({ error: "Missing required fields." });
+    }
+
+    try {
+      const unsignedTx = await this.marketplaceService.sell({ walletAddress, assetName, quantity, policyId, price });
+      response.status(200).json({ unsignedTx });
+    } catch (error) {
+      response.status(500).json({ error: "Minting failed." });
     }
   };
 
@@ -48,6 +62,13 @@ export default new (class MarketplaceController {
     if (!walletAddress || !assetName || !quantity) {
       response.status(400).json({ error: "Missing required fields." });
     }
+
+    try {
+      const unsignedTx = await this.marketplaceService.mint({ walletAddress, assetName, quantity });
+      response.status(200).json({ unsignedTx });
+    } catch (error) {
+      response.status(500).json({ error: "Minting failed." });
+    }
   };
 
   /**
@@ -62,6 +83,13 @@ export default new (class MarketplaceController {
     if (!walletAddress || !assetName || !quantity) {
       response.status(400).json({ error: "Missing required fields." });
     }
+
+    try {
+      const unsignedTx = await this.marketplaceService.burn({ walletAddress, assetName, quantity });
+      response.status(200).json({ unsignedTx });
+    } catch (error) {
+      response.status(500).json({ error: "Minting failed." });
+    }
   };
 
   /**
@@ -72,9 +100,16 @@ export default new (class MarketplaceController {
    * @param response
    */
   refund = async (request: Request, response: Response) => {
-    const { walletAddress, assetName, quantity } = request.body;
+    const { policyId, assetName, quantity, walletAddress, price } = request.body;
     if (!walletAddress || !assetName || !quantity) {
       response.status(400).json({ error: "Missing required fields." });
+    }
+
+    try {
+      const unsignedTx = await this.marketplaceService.refund({ policyId, assetName, quantity, walletAddress, price });
+      response.status(200).json({ unsignedTx });
+    } catch (error) {
+      response.status(500).json({ error: "Minting failed." });
     }
   };
 })();

@@ -243,6 +243,17 @@ export class MarketplaceService extends MarketplaceAdapter {
     return await unsignedTx.complete();
   };
 
+  /**
+   * @action Buy
+   * @description The method is used to buy a asset on the ChainX Blockchain
+   *
+   * @param assetName - The name of the asset to sell
+   * @param PolicyId - The policyId of the asset to sell
+   * @param quantity - The quantity of the asset to be sell
+   * @param walletAddress - The address is used to burn a new asset on the ChainX Blockchain
+   *
+   * @returns unsignedTx - Returns a promise that resolves to the unsigned transaction string
+   */
   buy = async ({
     policyId,
     assetName,
