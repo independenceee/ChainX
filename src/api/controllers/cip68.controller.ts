@@ -28,7 +28,48 @@ export default new (class Cip68Controller {
       response.status(500).json({ error: "Minting failed." });
     }
   };
-  async burn(request: Request, response: Response) {}
 
-  async update(request: Request, response: Response) {}
+  /**
+   * @action POST /cip68/burn
+   * @description This method is used to mint a new asset on the ChainX blockchain.
+   *
+   * @param request
+   * @param response
+   */
+  async burn(request: Request, response: Response) {
+    const { walletAddress, assetName, quantity } = request.body;
+
+    if (!walletAddress || !assetName || !quantity) {
+      response.status(400).json({ error: "Missing required fields." });
+    }
+
+    try {
+      const unsignedTx = await this.cip68Service.burn({ walletAddress, assetName, quantity });
+      response.status(200).json({ unsignedTx });
+    } catch (error) {
+      response.status(500).json({ error: "Minting failed." });
+    }
+  }
+
+  /**
+   * @action POST /cip68/update
+   * @description This method is used to mint a new asset on the ChainX blockchain.
+   *
+   * @param request
+   * @param response
+   */
+  async update(request: Request, response: Response) {
+    const { walletAddress, assetName, metadata } = request.body;
+
+    if (!walletAddress || !assetName || !metadata) {
+      response.status(400).json({ error: "Missing required fields." });
+    }
+
+    try {
+      const unsignedTx = await this.cip68Service.update({ walletAddress, assetName, metadata });
+      response.status(200).json({ unsignedTx });
+    } catch (error) {
+      response.status(500).json({ error: "Minting failed." });
+    }
+  }
 })();

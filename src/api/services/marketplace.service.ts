@@ -14,6 +14,9 @@ export class MarketplaceService extends MarketplaceAdapter {
 
     return await unsignedTx.complete();
   };
+
+  
+
   sell = async ({}): Promise<string> => {
     const unsignedTx = this.meshTxBuilder;
 
