@@ -33,8 +33,8 @@ describe("Cip68", function () {
     return;
     const cip68Service: Cip68Service = new Cip68Service();
     const unsignedTx: string = await cip68Service.mint({
-      assetName: "Lychee",
-      quantity: "10000",
+      assetName: "Banana",
+      quantity: "1",
       walletAddress:
         "addr_test1qqsy43jcmcmrpn3fyqyl7yjrqsyktq4ttatpgrxa6xpjs9kr8c058qthpyvr5j5s338vr00x0hgq60saq9jwm30xe04s7nxk3k",
       metadata: {
@@ -53,7 +53,7 @@ describe("Cip68", function () {
     return;
     const cip68Service: Cip68Service = new Cip68Service();
     const unsignedTx: string = await cip68Service.update({
-      assetName: "Lychee",
+      assetName: "Banana",
       walletAddress:
         "addr_test1qqsy43jcmcmrpn3fyqyl7yjrqsyktq4ttatpgrxa6xpjs9kr8c058qthpyvr5j5s338vr00x0hgq60saq9jwm30xe04s7nxk3k",
       metadata: {
@@ -72,10 +72,10 @@ describe("Cip68", function () {
     return;
     const cip68Service: Cip68Service = new Cip68Service();
     const unsignedTx: string = await cip68Service.burn({
-      assetName: "Lychee",
+      assetName: "Banana",
       walletAddress:
         "addr_test1qqsy43jcmcmrpn3fyqyl7yjrqsyktq4ttatpgrxa6xpjs9kr8c058qthpyvr5j5s338vr00x0hgq60saq9jwm30xe04s7nxk3k",
-      quantity: "-10000",
+      quantity: "-1",
     });
     const platformSignedTx = await platformWallet.signTx(unsignedTx, true);
     const userSignedTx = await userWallet.signTx(platformSignedTx, true);

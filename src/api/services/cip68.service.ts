@@ -10,6 +10,10 @@ import {
   stringToHex,
 } from "@meshsdk/core";
 import { isEmpty, isNil, isNull } from "lodash";
+
+/**
+ *
+ */
 export class Cip68Service extends Cip68Adapter {
   /**
    * @action Mint
@@ -128,6 +132,17 @@ export class Cip68Service extends Cip68Adapter {
     return unsignedTx;
   };
 
+  /**
+   * @action Burn
+   * @description This method is used to burn a new asset on the ChainX blockchain.
+   *
+   * @param walletAddress - The address of the wallet that will receive the minted asset.
+   * @param assetName - The name of the asset to be minted.
+   * @param quantity - The quantity of the asset to be minted.
+   * @param txHash - TxHash associated with the asset.
+   *
+   * @returns unsignedTx - Returns a promise that resolves to the unsigned transaction string.
+   */
   burn = async ({
     assetName,
     quantity,
@@ -272,6 +287,17 @@ export class Cip68Service extends Cip68Adapter {
     return await unsignedTx.complete();
   };
 
+  /**
+   * @action Update
+   * @description This method is used to update a new asset on the ChainX blockchain.
+   *
+   * @param walletAddress - The address of the wallet that will receive the minted asset.
+   * @param assetName - The name of the asset to be minted.
+   * @param txHash - The txHash of the asset to be minted.
+   * @param metadata - Metadata associated with the asset.
+   *
+   * @returns unsignedTx - Returns a promise that resolves to the unsigned transaction string.
+   */
   update = async ({
     assetName,
     metadata,
